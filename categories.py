@@ -1,61 +1,76 @@
 import database
-import products
+import validator
 
-def getcategoryname(text):
-    categorynames=[]
-    categorynames=database.getcategorynames()
-    while(True):
-        while(text.strip()!="" and text.strip() not in categorynames ):
-            return text.strip()
-        else:
-            print("This is mandatory or it already exists")
-            text=input("Enter properly :")
 
 def category():
     while(True):
-        categorymenu=["Sub Menu","1.Add Category","2.View All Products","3.Search Category","4.Update Category","5.Delete Category","6.Back to main menu"]
+        categorymenu=["Sub Menu","1.Add Categories","2.View All Categories","3.Search Categories","4.Update Categories","5.Delete Categories","6.Back to main menu"]
         for i in categorymenu:
             print(i)
         categoryoption=input("Enter the operation number :")
-        categoryoption=products.getnumber(categoryoption)
+        categoryoption=validator.getnumber(categoryoption)
 
         match categoryoption:
             case 1:
-                categoryname=input("Enter the category name :")
-                categoryname=getcategoryname(categoryname)
+                categoryname=input("Enter then category name :").strip().lower()
+                categoryname=validator.getcategoryname(categoryname)
                 database.add_categories(categoryname)
 
             case 2:
-                print("All Infomation")
+                print("All Information")
                 database.view_categories()
 
             case 3:
-                searchcategoryname=input("Enter the category name to search :")
-                searchcategoryname=products.gettext(searchcategoryname)
+                searchcategoryname=input("Enter the category name to search :").strip().lower()
+                searchcategoryname=validator.gettext(searchcategoryname)
                 database.search_categories(searchcategoryname)
 
             case 4:
                 updatecategoryid=input("Enter the category id to update :")
-                updatecategoryid=products.getnumber(updatecategoryid)
-                if(database.check_categoryid(int(updatecategoryid))==1):
-                    newcategoryname=input("Enter the new category name :")
-                    newcategoryname=getcategoryname(newcategoryname)
-                    database.update_category(newcategoryname,int(updatecategoryid))
+                updatecategoryid=validator.getnumber(updatecategoryid)
+
+                if(database.check_categoryid(updatecategoryid)==1):
+                    newcategoryname=input("Enter the new category name :").strip().lower()
+                    updatecategoryconnectionvalidation=[]
+                    updatecategoryconnectionvalidation=database.categoryconnectionvalidation(updatecategoryid)
+
+                    if(updatecategoryconnectionvalidation):
+                        print("Product exists for this category so cannot update its name")
+                        continue
+
+                    newcategoryname=validator.getcategoryname(newcategoryname)
+                    database.update_category(newcategoryname,updatecategoryid)
 
             case 5:
                 deletecategoryid=input("Enter the category id to delete :")
-                deletecategoryid=products.getnumber(deletecategoryid)
-                if(database.check_categoryid(int(deletecategoryid))==1):
-                    ask=input("Enter y to continue and n to stop deletion")
+                deletecategoryid=validator.getnumber(deletecategoryid)
+
+                if(database.check_categoryid(deletecategoryid)==1):
+                    deletecategoryconnectionvalidation=[]
+                    deletecategoryconnectionvalidation=database.categoryconnectionvalidation(deletecategoryid)
+
+                    if(deletecategoryconnectionvalidation):
+                        print("Product exists for this category so cannot delete its name")
+                        continue
+
+                    ask=input("Enter y to continue and n to stop deletion :").strip().lower()
+                    ask=validator.gettext(ask)
+
                     if(ask=="y"):
                         database.delete_category(deletecategoryid)
                     elif(ask=="n"):
-                        print("Deletiong stopped")
+                        print("Deletion stopped")
                     else:
                         print("Enter either y or n")
 
             case 6:
-                break
+                chcategories=input("Really want to exit?\nEnter y to exit\nEnter n to go back :").strip().lower()
+                if(chcategories=="y"):
+                    break
+                elif(chcategories=="n"):
+                    continue
+                else:
+                    print("Enter either y or n")
 
             case _:
                 print("Please enter option from 1 to 6")

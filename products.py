@@ -1,48 +1,6 @@
 import database
+import validator
 
-def gettext(text):
-    while(True):
-        while(text.strip()!=""):
-            return text.strip()
-        else:
-            print("This field is mandatory")
-            text=input("Enter properly :")
-        
-def getprice(number):
-    while(True):
-        try:
-            while(number.strip()!="" and float(number)>0):
-                return float(number)
-            else:
-                print("This field is mandatory and should be more than 0")
-                number=input("Enter properly :")
-        except ValueError:
-            print("This field cannot contain letters")
-            number=input("Enter properly :")
-
-def getquantity(number):
-    while(True):
-        try:
-            while(number.strip()!="" and int(number)>=0):
-                return int(number)
-            else:
-                print("This field is mandatory and should not be negative")
-                number=input("Enter properly :")
-        except ValueError:
-            print("This field cannot contain letters")
-            number=input("Enter properly :")
-
-def getnumber(number):
-    while(True):
-        try:
-            while(number.strip()!="" and int(number)>0):
-                return int(number)
-            else:
-                print("This field is mandatory and should enter positive whole numbers")
-                number=input("Enter properly :")
-        except ValueError:
-            print("This field should contain only positive whole numbers")
-            number=input("Enter properly :")
 
 def product():
     while(True):
@@ -50,75 +8,83 @@ def product():
         for i in productsmenu:
             print(i)
         productoption=input("Enter the operation number :")
-        productoption=getnumber(productoption)
+        productoption=validator.getnumber(productoption)
 
         match productoption:
             case 1:
-                productname=input("Enter the product name :")
-                productname=gettext(productname)
+                productname=input("Enter the product name :").strip().lower()
+                productname=validator.getproductnames(productname)
 
-                category=input("Enter the category :")
-                category=gettext(category)
+                categorynames=[]
+                categorynames=database.getcategorynames()
+                for i in categorynames:
+                    print(i)
+                category=input("Enter the category :").strip().lower()
+                category=validator.getcategoryproductconnectionvalidation(category)
 
-                supplier=input("Enter the supplier :")
-                supplier=gettext(supplier)
+                supplier=input("Enter the supplier :").strip().lower()
+                supplier=validator.gettext(supplier)
 
                 purchaseprice=input("Enter the purchase price :")
-                purchaseprice=getprice(purchaseprice)
+                purchaseprice=validator.getprice(purchaseprice)
 
                 sellingprice=input("Enter the selling price :")
-                sellingprice=getprice(sellingprice)
+                sellingprice=validator.getprice(sellingprice)
 
                 initialstockquantity=input("Enter the initial stock quantity :")
-                initialstockquantity=getquantity(initialstockquantity)
+                initialstockquantity=validator.getquantity(initialstockquantity)
 
                 minimumstocklevel=input("Enter the minimum stock level :")
-                minimumstocklevel=getquantity(minimumstocklevel)
+                minimumstocklevel=validator.getquantity(minimumstocklevel)
                 database.add_product(productname,category,supplier,purchaseprice,sellingprice,initialstockquantity,minimumstocklevel)
 
             case 2:
-                print("All Infomation")
+                print("All Information")
                 database.view_products()
 
             case 3:
-                searchproductname=input("Enter the product name to search :")
-                searchproductname=gettext(searchproductname)
+                searchproductname=input("Enter the product name to search :").strip().lower()
+                searchproductname=validator.gettext(searchproductname)
                 database.search_products(searchproductname)
 
             case 4:
                 updateproductid=input("Enter the product id to update :")
-                updateproductid=getnumber(updateproductid)
+                updateproductid=validator.getnumber(updateproductid)
 
                 if(database.check_productid(updateproductid)==1):
-                    updateproductname=input("Enter the new product name :")
-                    updateproductname=gettext(updateproductname)
+                    updateproductname=input("Enter the new product name :").strip().lower()
+                    updateproductname=validator.getproductnames(updateproductname)
 
-                    updatecategory=input("Enter the new category :")
-                    updatecategory=gettext(updatecategory)
+                    categorynames=[]
+                    categorynames=database.getcategorynames()
+                    for i in categorynames:
+                        print(i)
+                    updatecategory=input("Enter the new category :").strip().lower()
+                    updatecategory=validator.getcategoryproductconnectionvalidation(updatecategory)
 
-                    updatesupplier=input("Enter the new supplier :")
-                    updatesupplier=gettext(updatesupplier)
+                    updatesupplier=input("Enter the new supplier :").strip().lower()
+                    updatesupplier=validator.gettext(updatesupplier)
 
                     updatepurchaseprice=input("Enter the new purchase price :")
-                    updatepurchaseprice=getprice(updatepurchaseprice)
+                    updatepurchaseprice=validator.getprice(updatepurchaseprice)
 
                     updatesellingprice=input("Enter the new selling price :")
-                    updatesellingprice=getprice(updatesellingprice)
+                    updatesellingprice=validator.getprice(updatesellingprice)
 
                     updateinitialstockquantity=input("Enter the new initial stock quantity :")
-                    updateinitialstockquantity=getquantity(updateinitialstockquantity)
+                    updateinitialstockquantity=validator.getquantity(updateinitialstockquantity)
 
                     updateminimumstocklevel=input("Enter the new minimum stock level :")
-                    updateminimumstocklevel=getquantity(updateminimumstocklevel)
+                    updateminimumstocklevel=validator.getquantity(updateminimumstocklevel)
                     database.update_products(updateproductname,updatecategory,updatesupplier,updatepurchaseprice,updatesellingprice,updateinitialstockquantity,updateminimumstocklevel,updateproductid)
                     
             case 5:
                 deleteproductid=input("Enter the product id to delete :")
-                deleteproductid=getnumber(deleteproductid)
+                deleteproductid=validator.getnumber(deleteproductid)
 
                 if(database.check_productid(deleteproductid)==1):
-                    ch=input("Enter y to continue deletion , n to stop deletion")
-                    ch=gettext(ch)
+                    ch=input("Enter y to continue deletion , n to stop deletion :").strip().lower()
+                    ch=validator.gettext(ch)
 
                     if(ch=="y"):
                         database.delete_product(deleteproductid)
@@ -128,7 +94,13 @@ def product():
                         print("Choose either y or n")
 
             case 6:
-                break
+                chproducts=input("Really want to exit?\nEnter y to exit\nEnter n to go back :").strip().lower()
+                if(chproducts=="y"):
+                    break
+                elif(chproducts=="n"):
+                    continue
+                else:
+                    print("Enter either y or n")
 
             case _:
                 print("Please enter option from 1 to 6")

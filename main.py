@@ -19,8 +19,34 @@ while(True):
         case 2:
             categories.category()
 
+        case 3:
+            print("Not implemented. Under construction")
+
+        case 4:
+            print("Not implemented. Under construction")
+
+        case 5:
+            print("Not implemented. Under construction")
+
+        case 6:
+            print("Not implemented. Under construction")
+
+        case 7:
+            print("Not implemented. Under construction")
+
         case 8:
-            break
+            chmain=input("Really want to exit?\nEnter y to exit\nEnter n to go back :").strip().lower()
+            if(chmain=="y"):
+                break
+            elif(chmain=="n"):
+                continue
+            else:
+                print("Enter either y or n")
+                continue
 
         case _:
             print("Please enter option from 1 to 8")
+
+            
+#mysql -u root -p
+#pip freeze > requirements.txt
