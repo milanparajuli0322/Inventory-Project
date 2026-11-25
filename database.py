@@ -13,10 +13,10 @@ mydb=mysql.connector.connect(
     password=os.getenv("DB_PASSWORD")
 )
 
-#Manage Products functions
+#Manage Products Functions
 def add_product(productname,category,supplier,purchaseprice,sellingprice,initialstockquantity,minimumstocklevel):
     sql = """INSERT INTO products(product_name, category, supplier, purchase_price, selling_price,
-    stock_quantity, minimum_stock_level)VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+    stock_quantity, minimum_stock_level) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
     val=(productname, category, supplier, purchaseprice,sellingprice, initialstockquantity, minimumstocklevel)
     mycursor.execute(sql,val)
     mydb.commit()
@@ -61,17 +61,78 @@ def delete_product(deleteproductid):
     val=(deleteproductid,)
     mycursor.execute(sql,val)
     mydb.commit()
-    
-if(mydb.is_connected()):
+
+#Manage Category Functions
+def add_categories(categoryname):
+    sql="""INSERT INTO categories (category_name) Values (%s)"""
+    val=(categoryname,)
+    mycursor.execute(sql,val)
+    mydb.commit()
+
+def getcategorynames():
+    lst=[]
+    sql="SELECT category_name FROM categories"
+    mycursor.execute(sql)
+    myresults=mycursor.fetchall()
+    for i in myresults:
+        lst.extend(i)
+    return lst
+
+def view_categories():
+    sql="SELECT * FROM categories"
+    mycursor.execute(sql)
+    myresults=mycursor.fetchall()
+    for i in myresults:
+        print(i)
+
+def search_categories(searchcategoryname):
+    sql="SELECT * FROM categories WHERE category_name=%s"
+    val=(searchcategoryname,)
+    mycursor.execute(sql,val)
+    myresults=mycursor.fetchall()
+    if(not myresults):
+        print("No results found")
+    else:
+        for i in myresults:
+            print(i)
+
+def check_categoryid(updatecategoryid):
+    sql="SELECT * FROM categories WHERE category_id=%s"
+    val=(updatecategoryid,)
+    mycursor.execute(sql,val)
+    myresults=mycursor.fetchall()
+    if(not myresults):
+        print("No result found")
+    else:
+        return 1
+
+def update_category(newcategoryname,updatecategoryid):
+    sql="UPDATE categories SET category_name=%s WHERE category_id=%s"
+    val=(newcategoryname,updatecategoryid)
+    mycursor.execute(sql,val)
+    mydb.commit()
+
+def delete_category(deletecategoryid):
+    sql="DELETE FROM categories WHERE category_id=%s"
+    val=(deletecategoryid,)
+    mycursor.execute(sql,val)
+    mydb.commit()
+
+if(mydb.is_connected()): 
     mycursor=mydb.cursor()
     sql="CREATE DATABASE IF NOT EXISTS inventory_db"
     mycursor.execute(sql)
+
     sql="USE inventory_db"
     mycursor.execute(sql)
+
     sql = """CREATE TABLE IF NOT EXISTS products (product_id INT AUTO_INCREMENT PRIMARY KEY,product_name VARCHAR(100) NOT NULL,
     category VARCHAR(100) NOT NULL,supplier VARCHAR(100),purchase_price DECIMAL(10,2) NOT NULL,selling_price DECIMAL(10,2) NOT NULL,
     stock_quantity INT NOT NULL DEFAULT 0,minimum_stock_level INT NOT NULL DEFAULT 0)"""
     mycursor.execute(sql)
+
+    sql = """CREATE TABLE IF NOT EXISTS categories (category_id INT AUTO_INCREMENT PRIMARY KEY,category_name VARCHAR(100) NOT NULL UNIQUE)"""
+    mycursor.execute(sql)
+
 else:
     print("Server cannot connect")
-
