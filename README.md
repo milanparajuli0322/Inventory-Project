@@ -1,21 +1,41 @@
-# Inventory
+# Inventory Management System
 
-A Python command-line inventory management system with MySQL, supporting add, view, search, update and delete for products.
+A command-line inventory management system built with Python and MySQL. This application allows users to manage products and categories with strict input validation and relational database constraints.
 
-## Setup
+## Features
+- **Product Management:** Full CRUD operations (Add, View, Search, Update, Delete) for products.
+- **Category Management:** Full CRUD operations for categories.
+- **Relational Integrity:** Prevents the deletion of a category if there are existing products assigned to it.
+- **Validation:** Strict input validation for text, integers, and decimal prices (prevents negative numbers, empty fields, and duplicates).
+- **Partial Search:** Search functionality using SQL `LIKE` queries.
 
-1. Clone the repo and create a virtual environment: `python3 -m venv venv` then `source venv/bin/activate` (on Windows: `.\venv\Scripts\activate`)
+## Tech Stack
+- **Language:** Python 3
+- **Database:** MySQL
+- **Libraries:** `mysql-connector-python`, `python-dotenv`
 
-2. Install dependencies: `pip install -r requirements.txt`
+## Setup & Installation
 
-3. Make sure MySQL is installed and running.
+1. **Clone the repository and navigate into the folder:**
+   git clone https://github.com/milanparajuli0322/Inventory-Project.git
+   cd Inventory-Project
 
-4. Create a `.env` file in the project folder with your MySQL details: `DB_HOST`, `DB_USER` and `DB_PASSWORD`
+2. **Create and activate a virtual environment:**
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows use: .\venv\Scripts\activate
 
-5. Run the app: `python3 main.py`
+3. **Install the required dependencies:**
+   pip install -r requirements.txt
+
+4. **Set up environment variables:**
+   Create a .env file in the root directory and add your MySQL credentials:
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASSWORD=your_password
+
+5. **Run the application:**
+   python3 main.py
 
 ## Notes
-
-- The `inventory_db` database and `products` table are created automatically on first run.
-- Search matches the exact product name.
-- Only product management is working for now.
+- The database (inventory_db) and the required tables are created automatically on the first run if they do not exist.
+- This is currently a backend CLI (Command Line Interface) application. Web frontend and user authentication are not implemented yet.

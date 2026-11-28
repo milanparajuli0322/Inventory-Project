@@ -1,5 +1,6 @@
 import products
 import categories
+import validator
 
 myoptions=["Menu","1.Manage Products","2.Manage Category","3.Manage Suppliers","4.Manage Customer",
         "5.Manage Inventory","6.Manage Order","7.Sales Report","8.Exit"]
@@ -10,7 +11,7 @@ while(True):
     for i in myoptions:
         print(i)
     option=input("Enter the operation number :")
-    option=products.getnumber(option)
+    option=validator.getnumber(option)
 
     match option:
         case 1:
